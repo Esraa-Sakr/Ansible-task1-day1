@@ -1,0 +1,58 @@
+- name: Install and configure Apache to serve custom web page
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Install Apache web server
+      yum:
+        name: httpd
+        state: present
+
+    - name: Start Apache web server
+      service:
+        name: httpd
+        state: started
+
+    - name: Copy index.html file to web server
+      copy:
+        src: /home/esraasakr/Aswan-SA-Ansiblee/ansible-task-1/index.html
+        dest: /var/www/html/
+
+    - name: Copy CSS files to web server
+      copy:
+        src: /home/esraasakr/Aswan-SA-Ansiblee/ansible-task-1/css/style.css
+        dest: /var/www/html/css/
+
+    - name: Configure Apache to serve custom web page on port 8090
+      copy:
+        src: /etc/httpd/conf/httpd.conf
+        dest: /etc/httpd/conf/httpd.conf.orig
+
+    - name: Update Apache configuration for custom web page on port 8090
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        line: 'Listen 8090'
+        state: present
+        backrefs: true
+
+    - name: Update Apache configuration for custom web page on port 8090
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^DocumentRoot '
+        line: 'DocumentRoot "/var/www/html"'
+        state: present
+        backrefs: true
+
+    - name: Update Apache configuration for custom web page on port 8090
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^<Directory "/var/www/html">'
+        line: '<Directory "/var/www/html">\n  Options Indexes FollowSymLinks\n  AllowOverride All\n  Require all granted\n'
+        state: present
+        backrefs: true
+
+- name: Restart Apache web server
+  service:
+    name: httpd
+    state: restarted
+
