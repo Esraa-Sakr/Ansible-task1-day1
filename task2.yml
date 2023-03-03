@@ -1,0 +1,25 @@
+- name: My task2 
+  hosts: all
+  become: true
+  tasks:
+    - name: Copy folder
+      synchronize:
+        src: "/home/esraasakr/Aswan-SA-Ansiblee/Booster_CI_CD_Project-master" 
+        dest: "/home/ec2-user/" 
+
+    - name: install required packages
+      yum: 
+        name: [python3,python3-pip] 
+        update_cache: yes 
+
+    - name: install required packages
+      command: pip3 install -r /home/ec2-user/Booster_CI_CD_Project-master/requirements.txt
+
+    - name: make migrations for DB 
+      command: python3 /home/ec2-user/Booster_CI_CD_Project-master/manage.py makemigrations 
+
+    - name: apply the migrations 
+      command: python3 /home/ec2-user/Booster_CI_CD_Project-master/manage.py migrate 
+
+    - name: start the server 
+      command: python3 /home/ec2-user/Booster_CI_CD_Project-master/manage.py runserver 0.0.0.0:8000
