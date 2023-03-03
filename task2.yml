@@ -22,4 +22,4 @@
       command: python3 /home/ubuntu/Booster_CI_CD_Project-master/manage.py migrate 
 
     - name: start the server 
-      command: python3 /home/ubuntu/Booster_CI_CD_Project-master/manage.py runserver 0.0.0.0:8000
+      shell: python3 /home/ubuntu/Booster_CI_CD_Project-master/manage.py runserver 0.0.0.0:8000 &
